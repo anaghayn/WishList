@@ -1,0 +1,34 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <meta charset= "UTF-8">
+        <title>{{request.session.username}}</title>
+    </head>
+    <body>
+        <p><a href = "{% url 'user:logout' %}">Logout</a></p>
+        <h1>Hello, {{request.session.username}} !</h1>
+        <h2>Your Wish List:</h2>
+        {% for item in items %}
+        <h3><a href="{% url 'home:item' item_id=item.id %}">{{item.title}}</a> wish by: {{item.user.name}} {{item.created_at}} <a href="{% url 'home:addWish' wish_id=item.id %}">Add to wishlist</a></h3>
+        {% endfor %}
+        <hr><hr>
+
+        <h2>Other users Wish list</h2>
+    
+        {% for wish in wishes %}
+        <h3><a href="{% url 'home:item' item_id=wish.wish.id %}">
+            {{wish.wish.title}}</a>
+    
+             By: {{wish.wish.user.name}} added on {{wish.created_at}} 
+             {% if request.session.user_id == wish.wish.user.id %}
+                <a href="{% url 'home:delete' item_id=wish.wish_id %}"> Delete </a>
+             {% else %}
+                <a href="{% url 'home:removeWish' wish_id=wish.wish_id %}"> Remove </a>
+             {% endif %}
+             
+        {% endfor %}
+        <hr><hr>
+        <a href="{% url 'home:addItem' %}">Add an item</a>
+        
+    </body>
+</html>
